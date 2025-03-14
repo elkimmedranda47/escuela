@@ -1,0 +1,20 @@
+spring.application.name=prueba
+
+# Configuración de la base de datos
+spring.datasource.url=jdbc:postgresql://localhost:5432/bd_java
+spring.datasource.username=postgres
+spring.datasource.password=password
+
+# Configuración de Jakarta Persistence
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+#spring.jpa.hibernate.ddl-auto=update
+spring.jpa.hibernate.ddl-auto=create
+#spring.jpa.hibernate.ddl-auto=validate
+#spring.jpa.hibernate.ddl-auto=create-drop
+
+
+# Configuración para mostrar las consultas SQL en la consola
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.use_sql_comments=true
+

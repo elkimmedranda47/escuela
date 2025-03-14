@@ -1,0 +1,1016 @@
+-- Obtener el nombre de la secuencia para la columna id de la tabla author
+SELECT pg_get_serial_sequence('author', 'id');
+
+-- Supongamos que la secuencia se llama author_id_seq
+ALTER SEQUENCE public.author_id_seq RESTART WITH 1;
+
+-- Obtener el nombre de la secuencia para la columna id de la tabla style
+SELECT pg_get_serial_sequence('style', 'id');
+
+-- Supongamos que la secuencia se llama style_id_seq
+ALTER SEQUENCE public.style_id_seq RESTART WITH 1;
+
+-- Obtener el nombre de la secuencia para la columna id de la tabla book
+SELECT pg_get_serial_sequence('book', 'id');
+
+-- Supongamos que la secuencia se llama book_id_seq
+ALTER SEQUENCE public.book_id_seq RESTART WITH 1;
+
+-- Obtener el nombre de la secuencia para la columna id de la tabla theme
+SELECT pg_get_serial_sequence('theme', 'id');
+
+-- Supongamos que la secuencia se llama theme_id_seq
+ALTER SEQUENCE public.theme_id_seq RESTART WITH 1;
+
+
+
+
+INSERT INTO style (name, description) VALUES ('Fiction', 'Fictional works');
+INSERT INTO style (name, description) VALUES ('Non-Fiction', 'Non-fictional works');
+INSERT INTO style (name, description) VALUES ('Sci-Fi', 'Science Fiction');
+INSERT INTO style (name, description) VALUES ('Fantasy', 'Fantasy works');
+INSERT INTO style (name, description) VALUES ('Romance', 'Romantic works');
+
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (1, 'author1@example.com', 'John', '123-456-7890', 'Doe');
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (2, 'author2@example.com', 'Jane', '234-567-8901', 'Smith');
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (3, 'author3@example.com', 'Alice', '345-678-9012', 'Johnson');
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (4, 'author4@example.com', 'Bob', '456-789-0123', 'Williams');
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (5, 'author5@example.com', 'Charlie', '567-890-1234', 'Brown');
+
+
+INSERT INTO book (isbn, name) VALUES ('978-3-16-148410-0', 'Book One');
+INSERT INTO book (isbn, name) VALUES ('978-1-23-456789-7', 'Book Two');
+INSERT INTO book (isbn, name) VALUES ('978-0-12-345678-9', 'Book Three');
+INSERT INTO book (isbn, name) VALUES ('978-9-87-654321-0', 'Book Four');
+INSERT INTO book (isbn, name) VALUES ('978-4-56-789012-3', 'Book Five');
+
+INSERT INTO theme (name) VALUES ('Adventure');
+INSERT INTO theme (name) VALUES ('Mystery');
+INSERT INTO theme (name) VALUES ('Horror');
+INSERT INTO theme (name) VALUES ('Historical');
+INSERT INTO theme (name) VALUES ('Thriller');
+
+
+INSERT INTO author_book (author_id, book_id) VALUES (1, 1);
+INSERT INTO author_book (author_id, book_id) VALUES (2, 2);
+INSERT INTO author_book (author_id, book_id) VALUES (3, 3);
+INSERT INTO author_book (author_id, book_id) VALUES (4, 4);
+INSERT INTO author_book (author_id, book_id) VALUES (5, 5);
+
+
+INSERT INTO book_theme (book_id, theme_id) VALUES (1, 1);
+INSERT INTO book_theme (book_id, theme_id) VALUES (2, 2);
+INSERT INTO book_theme (book_id, theme_id) VALUES (3, 3);
+INSERT INTO book_theme (book_id, theme_id) VALUES (4, 4);
+INSERT INTO book_theme (book_id, theme_id) VALUES (5, 5);
+
+
+------------------------------------------------------------------------------------------
+
+INSERT INTO style (name, description) VALUES ('Biography', 'Biographical works');
+INSERT INTO style (name, description) VALUES ('Drama', 'Dramatic works');
+INSERT INTO style (name, description) VALUES ('Comedy', 'Comedic works');
+INSERT INTO style (name, description) VALUES ('Poetry', 'Poetic works');
+INSERT INTO style (name, description) VALUES ('Horror', 'Horror works');
+
+
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (1, 'author6@example.com', 'Dave', '678-901-2345', 'Miller');
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (2, 'author7@example.com', 'Eve', '789-012-3456', 'Taylor');
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (3, 'author8@example.com', 'Frank', '890-123-4567', 'Anderson');
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (4, 'author9@example.com', 'Grace', '901-234-5678', 'Thomas');
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (5, 'author10@example.com', 'Hank', '012-345-6789', 'Jackson');
+
+
+
+INSERT INTO theme (name) VALUES ('Comedy');
+INSERT INTO theme (name) VALUES ('Drama');
+INSERT INTO theme (name) VALUES ('Science Fiction');
+INSERT INTO theme (name) VALUES ('Fantasy');
+INSERT INTO theme (name) VALUES ('Biography');
+
+
+
+INSERT INTO author_book (author_id, book_id) VALUES (6, 1);
+INSERT INTO author_book (author_id, book_id) VALUES (7, 2);
+INSERT INTO author_book (author_id, book_id) VALUES (8, 3);
+INSERT INTO author_book (author_id, book_id) VALUES (9, 4);
+INSERT INTO author_book (author_id, book_id) VALUES (10, 5);
+
+
+
+
+INSERT INTO book_theme (book_id, theme_id) VALUES (1, 6);
+INSERT INTO book_theme (book_id, theme_id) VALUES (2, 7);
+INSERT INTO book_theme (book_id, theme_id) VALUES (3, 8);
+INSERT INTO book_theme (book_id, theme_id) VALUES (4, 9);
+INSERT INTO book_theme (book_id, theme_id) VALUES (5, 10);
+
+
+select * from author
+------------------------------------------28-09-2024------------------------------------------------------------------------------------
+-- Crear tabla de estilos
+CREATE TABLE style (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    name VARCHAR(255),
+    description VARCHAR(255)
+);
+
+-- Crear tabla de autores
+CREATE TABLE author (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    style_id BIGINT,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    name VARCHAR(255),
+    phone VARCHAR(255),
+    surname VARCHAR(255),
+    FOREIGN KEY (style_id) REFERENCES style(id)
+);
+
+-- Crear tabla de libros
+CREATE TABLE book (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    isbn VARCHAR(255),
+    name VARCHAR(255)
+);
+
+-- Crear tabla de temáticas
+CREATE TABLE theme (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    name VARCHAR(255)
+);
+
+-- Crear tabla de relación entre autores y libros (Muchos a Muchos)
+CREATE TABLE author_book (
+    author_id BIGINT NOT NULL,
+    book_id BIGINT NOT NULL,
+    PRIMARY KEY (author_id, book_id),
+    FOREIGN KEY (author_id) REFERENCES author(id),
+    FOREIGN KEY (book_id) REFERENCES book(id)
+);
+
+-- Crear tabla de relación entre libros y temáticas (Muchos a Muchos)
+CREATE TABLE book_theme (
+    book_id BIGINT NOT NULL,
+    theme_id BIGINT NOT NULL,
+    PRIMARY KEY (book_id, theme_id),
+    FOREIGN KEY (book_id) REFERENCES book(id),
+    FOREIGN KEY (theme_id) REFERENCES theme(id)
+);
+
+-- Insertar estilos
+INSERT INTO style (name, description) VALUES ('Biography', 'Biographical works');
+INSERT INTO style (name, description) VALUES ('Drama', 'Dramatic works');
+INSERT INTO style (name, description) VALUES ('Comedy', 'Comedic works');
+INSERT INTO style (name, description) VALUES ('Poetry', 'Poetic works');
+INSERT INTO style (name, description) VALUES ('Horror', 'Horror works');
+
+-- Insertar autores (sin ID, que se generará automáticamente)
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (1, 'author6@example.com', 'Dave', '678-901-2345', 'Miller');
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (2, 'author7@example.com', 'Eve', '789-012-3456', 'Taylor');
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (3, 'author8@example.com', 'Frank', '890-123-4567', 'Anderson');
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (4, 'author9@example.com', 'Grace', '901-234-5678', 'Thomas');
+INSERT INTO author (style_id, email, name, phone, surname) VALUES (5, 'author10@example.com', 'Hank', '012-345-6789', 'Jackson');
+
+-- Insertar libros
+INSERT INTO book (isbn, name) VALUES ('978-3-16-148410-0', 'Book One');
+INSERT INTO book (isbn, name) VALUES ('978-1-23-456789-7', 'Book Two');
+INSERT INTO book (isbn, name) VALUES ('978-0-12-345678-9', 'Book Three');
+INSERT INTO book (isbn, name) VALUES ('978-9-87-654321-0', 'Book Four');
+INSERT INTO book (isbn, name) VALUES ('978-4-56-789012-3', 'Book Five');
+
+-- Insertar temáticas
+INSERT INTO theme (name) VALUES ('Comedy');
+INSERT INTO theme (name) VALUES ('Drama');
+INSERT INTO theme (name) VALUES ('Science Fiction');
+INSERT INTO theme (name) VALUES ('Fantasy');
+INSERT INTO theme (name) VALUES ('Biography');
+
+-- Verifica los IDs generados para las temáticas
+-- SELECT * FROM theme;
+
+-- Relacionar autores con libros
+-- Asegúrate de que los IDs generados automáticamente son los correctos para cada autor.
+-- Puedes usar un SELECT * FROM author; después de insertar los autores para obtener sus IDs.
+INSERT INTO author_book (author_id, book_id) VALUES (1, 1);
+INSERT INTO author_book (author_id, book_id) VALUES (2, 2);
+INSERT INTO author_book (author_id, book_id) VALUES (3, 3);
+INSERT INTO author_book (author_id, book_id) VALUES (4, 4);
+INSERT INTO author_book (author_id, book_id) VALUES (5, 5);
+
+-- Relacionar libros con temáticas
+-- Asegúrate de que los theme_id coincidan con los IDs generados
+-- por la tabla theme.
+INSERT INTO book_theme (book_id, theme_id) VALUES (1, 1);
+INSERT INTO book_theme (book_id, theme_id) VALUES (2, 2);
+INSERT INTO book_theme (book_id, theme_id) VALUES (3, 3);
+INSERT INTO book_theme (book_id, theme_id) VALUES (4, 4);
+INSERT INTO book_theme (book_id, theme_id) VALUES (5, 5);
+
+-- Consultar todos los autores
+SELECT * FROM author;
+
+-- Consultar todas las temáticas
+SELECT * FROM book;
+
+
+
+
+---------------------------------------------------------06-10-2024------------------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS BOOK (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS THEME (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS BOOK_THEME (
+    book_id INT NOT NULL,
+    theme_id INT NOT NULL,
+    PRIMARY KEY (book_id, theme_id),
+    FOREIGN KEY (book_id) REFERENCES BOOK(id) ON DELETE CASCADE,
+    FOREIGN KEY (theme_id) REFERENCES THEME(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS AUTHOR (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
+    phone VARCHAR(20)
+);
+
+CREATE TABLE IF NOT EXISTS BOOK_AUTHOR (
+    book_id INT NOT NULL,
+    author_id INT NOT NULL,
+    PRIMARY KEY (book_id, author_id),
+    FOREIGN KEY (book_id) REFERENCES BOOK(id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES AUTHOR(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS STYLE (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS AUTHOR_STYLE (
+    author_id INT NOT NULL,
+    style_id INT ,
+    PRIMARY KEY (author_id, style_id),
+    FOREIGN KEY (author_id) REFERENCES AUTHOR(id) ON DELETE CASCADE,
+    FOREIGN KEY (style_id) REFERENCES STYLE(id) ON DELETE CASCADE
+);
+
+-- Insertar estilos
+INSERT INTO STYLE (name) VALUES ('Biography');
+INSERT INTO STYLE (name) VALUES ('Drama');
+INSERT INTO STYLE (name) VALUES ('Comedy');
+INSERT INTO STYLE (name) VALUES ('Poetry');
+INSERT INTO STYLE (name) VALUES ('Horror');
+INSERT INTO STYLE (name) VALUES ('Fantasy');
+INSERT INTO STYLE (name) VALUES ('Mystery');
+INSERT INTO STYLE (name) VALUES ('Romance');
+INSERT INTO STYLE (name) VALUES ('Science Fiction');
+INSERT INTO STYLE (name) VALUES ('Thriller');
+
+-- Insertar autores
+INSERT INTO AUTHOR (name, email, phone) VALUES ('Dave', 'author6@example.com', '678-901-2345');
+INSERT INTO AUTHOR (name, email, phone) VALUES ('Eve', 'author7@example.com', '789-012-3456');
+INSERT INTO AUTHOR (name, email, phone) VALUES ('Frank', 'author8@example.com', '890-123-4567');
+INSERT INTO AUTHOR (name, email, phone) VALUES ('Grace', 'author9@example.com', '901-234-5678');
+INSERT INTO AUTHOR (name, email, phone) VALUES ('Hank', 'author10@example.com', '012-345-6789');
+
+-- Insertar libros
+INSERT INTO BOOK (name) VALUES ('Book One');
+INSERT INTO BOOK (name) VALUES ('Book Two');
+INSERT INTO BOOK (name) VALUES ('Book Three');
+INSERT INTO BOOK (name) VALUES ('Book Four');
+INSERT INTO BOOK (name) VALUES ('Book Five');
+
+-- Insertar temáticas
+INSERT INTO THEME (name) VALUES ('Comedy');
+INSERT INTO THEME (name) VALUES ('Drama');
+INSERT INTO THEME (name) VALUES ('Science Fiction');
+INSERT INTO THEME (name) VALUES ('Fantasy');
+INSERT INTO THEME (name) VALUES ('Biography');
+
+-- Relacionar autores con libros
+INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (1, 1);
+INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (2, 2);
+INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (3, 3);
+INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (4, 4);
+INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (5, 5);
+
+-- Relacionar libros con temáticas
+INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (1, 1);
+INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (2, 2);
+INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (3, 3);
+INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (4, 4);
+INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (5, 5);
+
+
+------------------------------------------02-10-2024------------------------------------------------------------------------------------
+
+
+que sinifica la relacion 
+
+
+
+con este mimso ejemplo crerame las relaciones 
+creame un ejepmpo de estas relacions {
+(0..* 1..*) de book y theme?
+ (1...* 1...*) de book y Author?
+ (0...* 1 ) de Author y Author?
+}
+union de tablas: toma contact y mete su colunas en Author
+creame EL sql  relacions {
+(0..* 1..*) de book y theme?
+ (1...* 1...*) de book y Author?
+ (0...* 1 ) de Author y Author?
+}
+
+
+
+ejemplo:
++---------------------+                +---------------------+
+|       BOOK          |                |       THEME         |
+|---------------------|                |---------------------|
+|  id: 1              |                |  id: 1              |
+|  name: 'Dune'       |                |  name: 'Sci-Fi'     |
+|---------------------|                |---------------------|
+|  id: 2              |                |  id: 2              |
+|  name: 'Foundation' |                |  name: 'Adventure'  |
++---------------------+                +---------------------+
+          |                                    |     
+          |                                    |
+          |                                    |
+          |                                    |
+          |      +-----------------------+     |
+          +------|    book_theme         |-----+
+                 |-----------------------|
+                 |   book_id: 1          |
+                 |   theme_id: 1         |
+                 |-----------------------|
+                 |   book_id: 2          |
+                 |   theme_id: 2         |
+                 +-----------------------+
+
+
+
+
++---------------------+                +---------------------+
+|       BOOK          |                |       THEME         |
+|---------------------|                |---------------------|
+|  id: INT (PK)       |                |  id: INT (PK)       |
+|  name: VARCHAR       |                |  name: VARCHAR       |
+|---------------------|                |---------------------|
+|  id: 1              |                |  id: 1              |
+|  name: 'Dune'       |                |  name: 'Sci-Fi'     |
+|---------------------|                |---------------------|
+|  id: 2              |                |  id: 2              |
+|  name: 'Foundation' |                |  name: 'Adventure'  |
++---------------------+                +---------------------+
+          |                                    |     
+          |                                    |
+          |                                    |
+          |                                    |
+          |      +-----------------------+     |
+          +------|    book_theme         |-----+
+                 |-----------------------|
+                 |   book_id: INT (FK)   |
+                 |   theme_id: INT (FK)  |
+                 |-----------------------|
+                 |   book_id: 1          |
+                 |   theme_id: 1         |
+                 |-----------------------|
+                 |   book_id: 2          |
+                 |   theme_id: 2         |
+                 +-----------------------+
+
++---------------------+                
+|       AUTHOR        |
+|---------------------|
+|  id: INT (PK)       |
+|  name: VARCHAR       |
+|  email: VARCHAR      |
+|  phone: VARCHAR      |
+|---------------------|
+|  id: 1              |
+|  name: 'Frank Herbert'|
+|  email: 'frank@dune.com' |
+|  phone: '123456789'  |
+|---------------------|
+|  id: 2              |
+|  name: 'Isaac Asimov'|
+|  email: 'isaac@foundation.com' |
+|  phone: '987654321'  |
+|---------------------|
+|  id: 3              |
+|  name: 'Co-Author'  |
+|  email: NULL         |
+|  phone: NULL         |
++---------------------+
+          |                                    
+          |                                    
+          |                                   
+          |                                   
+          |      +-----------------------+     
+          +------|    BOOK_AUTHOR        |-----+
+                 |-----------------------|
+                 |   book_id: INT (FK)   |
+                 |   author_id: INT (FK) |
+                 |-----------------------|
+                 |   book_id: 1          |
+                 |   author_id: 1        |
+                 |-----------------------|
+                 |   book_id: 1          |
+                 |   author_id: 2        |
+                 |-----------------------|
+                 |   book_id: 2          |
+                 |   author_id: 2        |
+                 |-----------------------|
+                 |   book_id: 2          |
+                 |   author_id: 1        |
+                 +-----------------------+
+
++---------------------+
+|   AUTHOR_RELATION   |
+|---------------------|
+|   author_id: INT (FK)|
+|   related_author_id: INT (FK)|
+|---------------------|
+|   author_id: 1     |
+|   related_author_id: 2|
+|---------------------|
+|   author_id: 1     |
+|   related_author_id: 3|
+|---------------------|
+|   author_id: 2     |
+|   related_author_id: 1|
++---------------------+
+
+pega l alinea que va de BOOK_AUTHOR -----+  BOOK 
+
+
+
+**************************************************************************************************
+creame EL sql  relacions {
+(0..* 1..*) de book y theme?
+ (1...* 1...*) de book y Author?
+ (0...* 1 ) de Author y Author?
+}
+
+
+
+ejemplo:
++---------------------+                +---------------------+
+|       BOOK          |                |       THEME         |
+|---------------------|                |---------------------|
+|  id: 1              |                |  id: 1              |
+|  name: 'Dune'       |                |  name: 'Sci-Fi'     |
+|---------------------|                |---------------------|
+|  id: 2              |                |  id: 2              |
+|  name: 'Foundation' |                |  name: 'Adventure'  |
++---------------------+                +---------------------+
+          |                                    |     
+          |                                    |
+          |                                    |
+          |                                    |
+          |      +-----------------------+     |
+          +------|    book_theme         |-----+
+                 |-----------------------|
+                 |   book_id: 1          |
+                 |   theme_id: 1         |
+                 |-----------------------|
+                 |   book_id: 2          |
+                 |   theme_id: 2         |
+                 +-----------------------+
+
+
+
+
++---------------------+                +---------------------+
+|       BOOK          |                |       THEME         |
+|---------------------|                |---------------------|
+|  id: INT (PK)       |                |  id: INT (PK)       |
+|  name: VARCHAR       |                |  name: VARCHAR       |
+|---------------------|                |---------------------|
+|  id: 1              |                |  id: 1              |
+|  name: 'Dune'       |                |  name: 'Sci-Fi'     |
+|---------------------|                |---------------------|
+|  id: 2              |                |  id: 2              |
+|  name: 'Foundation' |                |  name: 'Adventure'  |
++---------------------+                +---------------------+
+          |                                    |     
+          |                                    |
+          |                                    |
+          |                                    |
+          |      +-----------------------+     |
+          +------|    book_theme         |-----+
+                 |-----------------------|
+                 |   book_id: INT (FK)   |
+                 |   theme_id: INT (FK)  |
+                 |-----------------------|
+                 |   book_id: 1          |
+                 |   theme_id: 1         |
+                 |-----------------------|
+                 |   book_id: 2          |
+                 |   theme_id: 2         |
+                 +-----------------------+
+
++---------------------+                
+|       AUTHOR        |
+|---------------------|
+|  id: INT (PK)       |
+|  name: VARCHAR       |
+|  email: VARCHAR      |
+|  phone: VARCHAR      |
+|---------------------|
+|  id: 1              |
+|  name: 'Frank Herbert'|
+|  email: 'frank@dune.com' |
+|  phone: '123456789'  |
+|---------------------|
+|  id: 2              |
+|  name: 'Isaac Asimov'|
+|  email: 'isaac@foundation.com' |
+|  phone: '987654321'  |
+|---------------------|
+|  id: 3              |
+|  name: 'Co-Author'  |
+|  email: NULL         |
+|  phone: NULL         |
++---------------------+
+          |                                    
+          |                                    
+          |                                   
+          |                                   
+          |      +-----------------------+     
+          +------|    BOOK_AUTHOR        |-----+
+                 |-----------------------|
+                 |   book_id: INT (FK)   |
+                 |   author_id: INT (FK) |
+                 |-----------------------|
+                 |   book_id: 1          |
+                 |   author_id: 1        |
+                 |-----------------------|
+                 |   book_id: 1          |
+                 |   author_id: 2        |
+                 |-----------------------|
+                 |   book_id: 2          |
+                 |   author_id: 2        |
+                 |-----------------------|
+                 |   book_id: 2          |
+                 |   author_id: 1        |
+                 +-----------------------+
+
++---------------------+
+|   AUTHOR_RELATION   |
+|---------------------|
+|   author_id: INT (FK)|
+|   related_author_id: INT (FK)|
+|---------------------|
+|   author_id: 1     |
+|   related_author_id: 2|
+|---------------------|
+|   author_id: 1     |
+|   related_author_id: 3|
+|---------------------|
+|   author_id: 2     |
+|   related_author_id: 1|
+
+ChatGPT dijo:
+ChatGPT
+Aquí tienes el SQL para crear las tablas y sus relaciones según las especificaciones que mencionaste:
+
+sql
+Copiar código
+
+
+
+
+-- Creación de la tabla BOOK
+CREATE TABLE BOOK (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Creación de la tabla THEME
+CREATE TABLE THEME (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Tabla intermedia para la relación (0..* 1..*) entre BOOK y THEME
+CREATE TABLE BOOK_THEME (
+    book_id INT NOT NULL,
+    theme_id INT NOT NULL,
+    PRIMARY KEY (book_id, theme_id),
+    FOREIGN KEY (book_id) REFERENCES BOOK(id) ON DELETE CASCADE,
+    FOREIGN KEY (theme_id) REFERENCES THEME(id) ON DELETE CASCADE
+);
+
+-- Creación de la tabla AUTHOR
+CREATE TABLE AUTHOR (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
+    phone VARCHAR(20)
+);
+
+-- Tabla intermedia para la relación (1...* 1...*) entre BOOK y AUTHOR
+CREATE TABLE BOOK_AUTHOR (
+    book_id INT NOT NULL,
+    author_id INT NOT NULL,
+    PRIMARY KEY (book_id, author_id),
+    FOREIGN KEY (book_id) REFERENCES BOOK(id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES AUTHOR(id) ON DELETE CASCADE
+);
+
+-- Creación de la tabla STYLE
+CREATE TABLE STYLE (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Tabla intermedia para la relación (0...* 1) entre AUTHOR y STYLE
+CREATE TABLE AUTHOR_STYLE (
+    author_id INT NOT NULL,
+    style_id INT NOT NULL,
+    PRIMARY KEY (author_id, style_id),
+    FOREIGN KEY (author_id) REFERENCES AUTHOR(id) ON DELETE CASCADE,
+    FOREIGN KEY (style_id) REFERENCES STYLE(id) ON DELETE CASCADE
+);
+
+
+
+*******************************************************************
+Descripción de las relaciones:
+(0.. 1..) entre BOOK y THEME**: Un libro puede tener múltiples temas y un tema puede ser asociado a múltiples libros.
+(1... 1...) entre BOOK y AUTHOR**: Un libro debe tener al menos un autor y un autor puede haber escrito múltiples libros.
+(0... 1) entre AUTHOR y AUTHOR*: Un autor puede tener relaciones con otros autores (por ejemplo, coautores), pero no es obligatorio.
+Si necesitas más detalles o ajustes, ¡hazmelo saber!
+
+
+
+***************************************************************************
+
+
+
+onsideraciones para WebFlux y JPA
+JPA vs. Reactive Repositories:
+
+JPA: Se basa en una implementación bloqueante y tradicional. Utiliza el contexto de persistencia y no es adecuado para un entorno reactivo donde la no bloqueante es esencial.
+Reactive Repositories: Con Spring Data, los repositorios reactivos no son directamente compatibles con JPA. Deberías considerar usar Spring Data R2DBC (Reactive Relational Database Connectivity) si deseas trabajar con una base de datos relacional de forma reactiva.
+Manejo de Relaciones:
+
+Las anotaciones como @ManyToMany funcionan con JPA, pero, en un entorno reactivo, debes tener cuidado al manejar las relaciones. La carga de entidades relacionadas debe ser gestionada de manera que no bloquee el hilo.
+Alternativa Reactiva
+Si decides continuar con el uso de un enfoque reactivo, aquí hay un ejemplo básico de cómo podrías implementar tus entidades usando R2DBC:
+
+Entidades con R2DBC
+Book
+
+java
+Copiar código
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
+import java.util.Set;
+
+@Table("book")
+public class Book {
+    @Id
+    private Long id;
+    private String name;
+
+    // Relación puede ser manejada de manera manual si se necesita.
+    // Aquí puedes almacenar solo IDs de temas.
+    private Set<Long> themeIds;
+    private Set<Long> authorIds;
+
+    // Getters y setters
+}
+Theme
+
+java
+Copiar código
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
+@Table("theme")
+public class Theme {
+    @Id
+    private Long id;
+    private String name;
+
+    // Getters y setters
+}
+Author
+
+java
+Copiar código
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
+import java.util.Set;
+
+@Table("author")
+public class Author {
+    @Id
+    private Long id;
+    private String name;
+    private String email;
+    private String phone;
+
+    // Relación puede ser manejada de manera manual si se necesita.
+    private Set<Long> styleIds;
+
+    // Getters y setters
+}
+Style
+
+java
+Copiar código
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
+@Table("style")
+public class Style {
+    @Id
+    private Long id;
+    private String name;
+
+    // Getters y setters
+}
+Repositorios con R2DBC
+Los repositorios se verían así:
+
+java
+Copiar código
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+
+public interface BookRepository extends ReactiveCrudRepository<Book, Long> {}
+public interface ThemeRepository extends ReactiveCrudRepository<Theme, Long> {}
+public interface AuthorRepository extends ReactiveCrudRepository<Author, Long> {}
+public interface StyleRepository extends ReactiveCrudRepository<Style, Long> {}
+Conclusión
+
+
+
+
+------------------------------------------13-10-2024------------------------------------------------------------------------------------
+
+mira (un author puede tener un solo style, un style puede tener o no muchos author) (un author puede tener muchos book, un book puede tener muchos autores) (un book puede tener muchos theme,un theme puede tener o no muchos nook) entregame etas sql con estas relaciones
+ChatGPT dijo:
+ChatGPT
+Con base en la descripción de las relaciones, las restricciones entre las entidades son:
+
+AUTHOR - STYLE:
+
+Un AUTHOR puede tener un solo STYLE, lo que indica una relación de uno a muchos desde STYLE hacia AUTHOR.
+Esto se implementa añadiendo un campo style_id en la tabla AUTHOR.
+BOOK - AUTHOR:
+
+Un AUTHOR puede tener muchos BOOK, y un BOOK puede tener muchos AUTHOR.
+Esto se traduce en una relación muchos a muchos, por lo que necesitamos una tabla intermedia BOOK_AUTHOR.
+BOOK - THEME:
+
+Un BOOK puede tener muchos THEME, y un THEME puede tener muchos BOOK.
+Sin embargo, un THEME puede estar sin libros (0..*).
+Esto también se traduce en una relación muchos a muchos, por lo que necesitamos una tabla intermedia BOOK_THEME.
+SQL con las Relaciones Propuestas:
+sql
+Copiar código
+-- Tabla de autores con una relación de uno a muchos con estilos
+CREATE TABLE IF NOT EXISTS STYLE (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS AUTHOR (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
+    phone VARCHAR(20),
+    style_id INT,
+    FOREIGN KEY (style_id) REFERENCES STYLE(id)
+);
+
+-- Tabla de libros
+CREATE TABLE IF NOT EXISTS BOOK (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Tabla de temas
+CREATE TABLE IF NOT EXISTS THEME (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Relación muchos a muchos entre BOOK y AUTHOR
+CREATE TABLE IF NOT EXISTS BOOK_AUTHOR (
+    book_id INT NOT NULL,
+    author_id INT NOT NULL,
+    PRIMARY KEY (book_id, author_id),
+    FOREIGN KEY (book_id) REFERENCES BOOK(id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES AUTHOR(id) ON DELETE CASCADE
+);
+
+-- Relación muchos a muchos entre BOOK y THEME, donde un THEME puede no tener libros
+CREATE TABLE IF NOT EXISTS BOOK_THEME (
+    book_id INT NOT NULL,
+    theme_id INT,
+    PRIMARY KEY (book_id, theme_id),
+    FOREIGN KEY (book_id) REFERENCES BOOK(id) ON DELETE CASCADE,
+    FOREIGN KEY (theme_id) REFERENCES THEME(id) ON DELETE CASCADE
+);
+Explicación de las Relaciones:
+STYLE - AUTHOR:
+
+AUTHOR contiene una clave foránea style_id que hace referencia a la tabla STYLE.
+Esto indica que cada AUTHOR puede estar asociado con un solo STYLE, mientras que un STYLE puede tener cero o más AUTHOR.
+Si se elimina un STYLE, los AUTHOR que estén relacionados deben actualizarse para reflejar esa eliminación (dependiendo de la lógica de la aplicación).
+BOOK - AUTHOR:
+
+La tabla BOOK_AUTHOR es una tabla intermedia que contiene book_id y author_id como claves foráneas.
+Esto permite la asociación de muchos BOOK con muchos AUTHOR, manteniendo la integridad referencial con ON DELETE CASCADE, de modo que al eliminar un BOOK o AUTHOR, las asociaciones relacionadas se eliminan automáticamente.
+BOOK - THEME:
+
+La tabla BOOK_THEME es una tabla intermedia que permite la relación muchos a muchos entre BOOK y THEME.
+Esto permite que un BOOK tenga múltiples THEME y que un THEME esté asociado con cero o más BOOK.
+La columna theme_id puede ser NULL, permitiendo que un BOOK no tenga un THEME asociado.
+ON DELETE CASCADE asegura que si un BOOK o THEME es eliminado, las asociaciones en BOOK_THEME se eliminan también.
+Resumen:
+Esta estructura respeta las reglas que especificaste:
+Relación de uno a muchos de STYLE hacia AUTHOR.
+Relación de muchos a muchos entre BOOK y AUTHOR.
+Relación de muchos a muchos entre BOOK y THEME, con posibilidad de que un THEME no tenga libros asociados.
+Con este esquema SQL, las relaciones y restricciones entre las entidades cumplen con la estructura deseada. Si necesitas más detalles sobre la implementación de estas relaciones en Spring Boot con WebFlux, puedo ayudarte con ejemplos de código.
+Si estás utilizando Spring WebFlux con PostgreSQL y deseas manejar relaciones de manera reactiva, considera migrar a R2DBC. Esto te permitirá aprovechar las características no bloqueantes de WebFlux y manejar mejor las interacciones con la base de datos. Sin embargo, si decides seguir usando JPA, ten en cuenta que seguirás trabajando en un contexto bloqueante, lo que puede afectar el rendimiento en aplicaciones altamente concurrentes.
+
+
+como estaba
+
+  String sql = "CREATE TABLE IF NOT EXISTS BOOK (\n" +
+                     "    id SERIAL PRIMARY KEY,\n" +
+                     "    name VARCHAR(255) NOT NULL\n" +
+                     ");\n" +
+                     "CREATE TABLE IF NOT EXISTS THEME (\n" +
+                     "    id SERIAL PRIMARY KEY,\n" +
+                     "    name VARCHAR(255) NOT NULL\n" +
+                     ");\n" +
+                     "CREATE TABLE IF NOT EXISTS BOOK_THEME (\n" +
+                     "    book_id INT NOT NULL,\n" +
+                     "    theme_id INT,\n" +
+                     "    PRIMARY KEY (book_id, theme_id),\n" +
+                     "    FOREIGN KEY (book_id) REFERENCES BOOK(id) ON DELETE CASCADE,\n" +
+                     "    FOREIGN KEY (theme_id) REFERENCES THEME(id) ON DELETE CASCADE\n" +
+                     ");\n" +
+                     "CREATE TABLE IF NOT EXISTS AUTHOR (\n" +
+                     "    id SERIAL PRIMARY KEY,\n" +
+                     "    name VARCHAR(255) NOT NULL,\n" +
+                     "    email VARCHAR(255),\n" +
+                     "    phone VARCHAR(20)\n" +
+                     ");\n" +
+                     "CREATE TABLE IF NOT EXISTS BOOK_AUTHOR (\n" +
+                     "    book_id INT NOT NULL,\n" +
+                     "    author_id INT NOT NULL,\n" +
+                     "    PRIMARY KEY (book_id, author_id),\n" +
+                     "    FOREIGN KEY (book_id) REFERENCES BOOK(id) ON DELETE CASCADE,\n" +
+                     "    FOREIGN KEY (author_id) REFERENCES AUTHOR(id) ON DELETE CASCADE\n" +
+                     ");\n" +
+                     "CREATE TABLE IF NOT EXISTS STYLE (\n" +
+                     "    id SERIAL PRIMARY KEY,\n" +
+                     "    name VARCHAR(255) NOT NULL\n" +
+                     ");\n" +
+                     "CREATE TABLE IF NOT EXISTS AUTHOR_STYLE (\n" +
+                     "    author_id INT NOT NULL,\n" +
+                     "    style_id INT NOT NULL,\n" +
+                     "    PRIMARY KEY (author_id, style_id),\n" +
+                     "    FOREIGN KEY (author_id) REFERENCES AUTHOR(id) ON DELETE CASCADE,\n" +
+                     "    FOREIGN KEY (style_id) REFERENCES STYLE(id) ON DELETE CASCADE\n" +
+                     ");\n" +
+                     "-- Insertar estilos\n" +
+                     "INSERT INTO STYLE (name) VALUES ('Biography');\n" +
+                     "INSERT INTO STYLE (name) VALUES ('Drama');\n" +
+                     "INSERT INTO STYLE (name) VALUES ('Comedy');\n" +
+                     "INSERT INTO STYLE (name) VALUES ('Poetry');\n" +
+                     "INSERT INTO STYLE (name) VALUES ('Horror');\n" +
+                     "INSERT INTO STYLE (name) VALUES ('Fantasy');\n" +
+                     "INSERT INTO STYLE (name) VALUES ('Mystery');\n" +
+                     "INSERT INTO STYLE (name) VALUES ('Romance');\n" +
+                     "INSERT INTO STYLE (name) VALUES ('Science Fiction');\n" +
+                     "INSERT INTO STYLE (name) VALUES ('Thriller');\n" +
+                     "-- Insertar autores\n" +
+                     "INSERT INTO AUTHOR (name, email, phone) VALUES ('Dave', 'author6@example.com', '678-901-2345');\n" +
+                     "INSERT INTO AUTHOR (name, email, phone) VALUES ('Eve', 'author7@example.com', '789-012-3456');\n" +
+                     "INSERT INTO AUTHOR (name, email, phone) VALUES ('Frank', 'author8@example.com', '890-123-4567');\n" +
+                     "INSERT INTO AUTHOR (name, email, phone) VALUES ('Grace', 'author9@example.com', '901-234-5678');\n" +
+                     "INSERT INTO AUTHOR (name, email, phone) VALUES ('Hank', 'author10@example.com', '012-345-6789');\n" +
+                     "-- Insertar libros\n" +
+                     "INSERT INTO BOOK (name) VALUES ('Book One');\n" +
+                     "INSERT INTO BOOK (name) VALUES ('Book Two');\n" +
+                     "INSERT INTO BOOK (name) VALUES ('Book Three');\n" +
+                     "INSERT INTO BOOK (name) VALUES ('Book Four');\n" +
+                     "INSERT INTO BOOK (name) VALUES ('Book Five');\n" +
+                     "-- Insertar temáticas\n" +
+                     "INSERT INTO THEME (name) VALUES ('Comedy');\n" +
+                     "INSERT INTO THEME (name) VALUES ('Drama');\n" +
+                     "INSERT INTO THEME (name) VALUES ('Science Fiction');\n" +
+                     "INSERT INTO THEME (name) VALUES ('Fantasy');\n" +
+                     "INSERT INTO THEME (name) VALUES ('Biography');\n" +
+                     "-- Relacionar autores con libros\n" +
+                     "INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (1, 1);\n" +
+                     "INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (2, 2);\n" +
+                     "INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (3, 3);\n" +
+                     "INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (4, 4);\n" +
+                     "INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (5, 5);\n" +
+                     "-- Relacionar libros con temáticas\n" +
+                     "INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (1, 1);\n" +
+                     "INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (2, 2);\n" +
+                     "INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (3, 3);\n" +
+                     "INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (4, 4);\n" +
+                     "INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (5, 5);";
+*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/**/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/**/
+como va quedando
+
+
+String sql = "CREATE TABLE IF NOT EXISTS STYLE (\n" +
+    "    id SERIAL PRIMARY KEY,\n" +
+    "    name VARCHAR(255) NOT NULL\n" +
+    ");\n" +
+    "CREATE TABLE IF NOT EXISTS AUTHOR (\n" +
+    "    id SERIAL PRIMARY KEY,\n" +
+    "    name VARCHAR(255) NOT NULL,\n" +
+    "    email VARCHAR(255),\n" +
+    "    phone VARCHAR(20),\n" +
+    "    style_id INT,\n" +
+    "    FOREIGN KEY (style_id) REFERENCES STYLE(id)\n" +
+    ");\n" +
+    "CREATE TABLE IF NOT EXISTS BOOK (\n" +
+    "    id SERIAL PRIMARY KEY,\n" +
+    "    name VARCHAR(255) NOT NULL\n" +
+    ");\n" +
+    "CREATE TABLE IF NOT EXISTS THEME (\n" +
+    "    id SERIAL PRIMARY KEY,\n" +
+    "    name VARCHAR(255) NOT NULL\n" +
+    ");\n" +
+    "CREATE TABLE IF NOT EXISTS BOOK_AUTHOR (\n" +
+    "    book_id INT NOT NULL,\n" +
+    "    author_id INT ,\n" +
+    "    PRIMARY KEY (book_id, author_id),\n" +
+    "    FOREIGN KEY (book_id) REFERENCES BOOK(id) ON DELETE CASCADE,\n" +
+    "    FOREIGN KEY (author_id) REFERENCES AUTHOR(id) ON DELETE CASCADE\n" +
+    ");\n" +
+    "CREATE TABLE IF NOT EXISTS BOOK_THEME (\n" +
+    "    book_id INT NOT NULL,\n" +
+    "    theme_id INT,\n" +
+    "    PRIMARY KEY (book_id, theme_id),\n" +
+    "    FOREIGN KEY (book_id) REFERENCES BOOK(id) ON DELETE CASCADE,\n" +
+    "    FOREIGN KEY (theme_id) REFERENCES THEME(id) ON DELETE CASCADE\n" +
+    ");\n" +
+    "-- Insertar estilos\n" +
+    "INSERT INTO STYLE (name) VALUES ('Biography');\n" +
+    "INSERT INTO STYLE (name) VALUES ('Drama');\n" +
+    "INSERT INTO STYLE (name) VALUES ('Comedy');\n" +
+    "INSERT INTO STYLE (name) VALUES ('Poetry');\n" +
+    "INSERT INTO STYLE (name) VALUES ('Horror');\n" +
+    "INSERT INTO STYLE (name) VALUES ('Fantasy');\n" +
+    "INSERT INTO STYLE (name) VALUES ('Mystery');\n" +
+    "INSERT INTO STYLE (name) VALUES ('Romance');\n" +
+    "INSERT INTO STYLE (name) VALUES ('Science Fiction');\n" +
+    "INSERT INTO STYLE (name) VALUES ('Thriller');\n" +
+    "-- Insertar autores\n" +
+    "INSERT INTO AUTHOR (name, email, phone, style_id) VALUES ('Dave', 'author6@example.com', '678-901-2345', 1);\n" +
+    "INSERT INTO AUTHOR (name, email, phone, style_id) VALUES ('Eve', 'author7@example.com', '789-012-3456', 2);\n" +
+    "INSERT INTO AUTHOR (name, email, phone, style_id) VALUES ('Frank', 'author8@example.com', '890-123-4567', 3);\n" +
+    "INSERT INTO AUTHOR (name, email, phone, style_id) VALUES ('Grace', 'author9@example.com', '901-234-5678', 4);\n" +
+    "INSERT INTO AUTHOR (name, email, phone, style_id) VALUES ('Hank', 'author10@example.com', '012-345-6789', 5);\n" +
+    "-- Insertar libros\n" +
+    "INSERT INTO BOOK (name) VALUES ('Book One');\n" +
+    "INSERT INTO BOOK (name) VALUES ('Book Two');\n" +
+    "INSERT INTO BOOK (name) VALUES ('Book Three');\n" +
+    "INSERT INTO BOOK (name) VALUES ('Book Four');\n" +
+    "INSERT INTO BOOK (name) VALUES ('Book Five');\n" +
+    "-- Insertar temáticas\n" +
+    "INSERT INTO THEME (name) VALUES ('Comedy');\n" +
+    "INSERT INTO THEME (name) VALUES ('Drama');\n" +
+    "INSERT INTO THEME (name) VALUES ('Science Fiction');\n" +
+    "INSERT INTO THEME (name) VALUES ('Fantasy');\n" +
+    "INSERT INTO THEME (name) VALUES ('Biography');\n" +
+    "-- Relacionar autores con libros\n" +
+    "INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (1, 1);\n" +
+    "INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (2, 2);\n" +
+    "INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (3, 3);\n" +
+    "INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (4, 4);\n" +
+    "INSERT INTO BOOK_AUTHOR (book_id, author_id) VALUES (5, 5);\n" +
+    "-- Relacionar libros con temáticas\n" +
+    "INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (1, 1);\n" +
+    "INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (2, 2);\n" +
+    "INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (3, 3);\n" +
+    "INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (4, 4);\n" +
+    "INSERT INTO BOOK_THEME (book_id, theme_id) VALUES (5, 5);";

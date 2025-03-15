@@ -22,6 +22,10 @@ import java.time.LocalDate;
 // src/main/java/com/testApi/prueba/models/Persona.java
 @Entity
 @Table(name = "personas")
+
+// el Json de Persona que se devuelve des de el repository  tendra los datos de cada
+//HERENCIA DE TABLAS ENTITY AFECTA EL JSON QUE SE DEVUELVE
+// subtipo (Estudiante, Profesor, Administrativo) tiene su propia tabla con campos específicos
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Persona {
     @Id

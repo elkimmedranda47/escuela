@@ -140,5 +140,12 @@ public class JwtService {
     }
 
 
+    public String extractUsername(String token) {
+        return this.verificar(token)
+                .map(jwt -> jwt.getClaim(MOBILE_CLAIM).asString()) // o GMAIL_CLAIM si usas email
+                .orElseThrow(() -> new JWTVerificationException("Token inválido"));
+    }
+
+
 
 }

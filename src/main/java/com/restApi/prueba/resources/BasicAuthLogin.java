@@ -20,13 +20,13 @@ public class BasicAuthLogin {
 
     public static final String BASIC_AUTH = "/basic-auth";
 
-    private final CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
     private final JwtService jwtService;
 
     //constructuro inicializa objeto CustomUserDetailsService---->userDetailsService
     @Autowired
-    public BasicAuthLogin(CustomUserDetailsService userDetailsService, JwtService jwtService) {
-        this.userDetailsService = userDetailsService;
+    public BasicAuthLogin(CustomUserDetailsService customUserDetailsService, JwtService jwtService) {
+        this.customUserDetailsService = customUserDetailsService;
         this.jwtService = jwtService;
     }
 
@@ -38,10 +38,11 @@ public class BasicAuthLogin {
         System.out.println("Llegamos");
         System.out.println("Correo: " + correo + " Password: " + password);
 
+        //SOBRE ESCRIBIENDO LA FUNCION----> loadUserByUsername();
         //le entregamos el correo a la funcion loadUserByUsername que es una funcion ya existente esta se sobre escribe,
         //le entregamos el correo al frameworck.
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(correo);
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(correo);
 
         if (userDetails == null) {
             return ResponseEntity.badRequest().body("Invalid email or password");

@@ -2,7 +2,7 @@ package com.restApi.prueba.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.restApi.prueba.http_errors.BadRequestException;
-import com.restApi.prueba.resources.Dtos.UsuarioDTO;
+import com.restApi.prueba.resources.Dtos.PersonaDTO;
 import com.restApi.prueba.services.PersonaService;
 import com.restApi.prueba.models.Persona;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +45,7 @@ public class PersonaController {
         return personaService.getAllUsuario();
     }
 
+    /*
     @GetMapping("/{id}")
     public UsuarioDTO getUsuarioById(@PathVariable Long id) {
         return personaService.getUsuarioById(id);
@@ -74,4 +75,6 @@ public class PersonaController {
         personaService.deleteUsuario(id);
         return ResponseEntity.noContent().build(); // Return 204 No Content
     }
+
+    */
 }

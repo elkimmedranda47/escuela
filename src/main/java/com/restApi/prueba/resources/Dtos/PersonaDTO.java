@@ -1,8 +1,6 @@
-package com.restApi.prueba.models;
+package com.restApi.prueba.resources.Dtos;
 
-
-
-import jakarta.persistence.*;
+import com.restApi.prueba.models.TipoPersona;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
@@ -13,20 +11,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-// src/main/java/com/testApi/prueba/models/Persona.java
-@Entity
-@Table(name = "personas")
-@Inheritance(strategy = InheritanceType.JOINED)
-public class Persona {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_persona")
+public class PersonaDTO {
     private Long idPersona;
 
     @NotBlank(message = "Nombre es obligatorio")
@@ -35,13 +24,11 @@ public class Persona {
     @NotBlank(message = "Apellido es obligatorio")
     private String apellido;
 
-    @Past(message = "Fecha de nacimiento no válida")
-    @Column(name = "fecha_nacimiento")
+    @Past(message = "Fecha de nacimiento debe ser pasada")
     private LocalDate fechaNacimiento;
 
     @NotBlank(message = "Email es obligatorio")
     @Email(message = "Formato de email inválido")
-    @Column(unique = true)
     private String email;
 
     @Pattern(regexp = "^\\+?[0-9]{7,15}$", message = "Teléfono no válido")
@@ -50,13 +37,7 @@ public class Persona {
     @NotBlank(message = "Password es obligatorio")
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private TipoPersona tipo;
+    private TipoPersona tipo; // ESTUDIANTE, PROFESOR, ADMINISTRATIVO
 
     // Getters y Setters
 }
-/*
-public enum TipoPersona {
-    ESTUDIANTE, PROFESOR, ADMINISTRATIVO
-}
-*/

@@ -15,6 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(BasicAuthLogin.BASIC_AUTH)
+
 public class BasicAuthLogin {
 
     public static final String BASIC_AUTH = "/basic-auth";
@@ -22,6 +23,7 @@ public class BasicAuthLogin {
     private final CustomUserDetailsService userDetailsService;
     private final JwtService jwtService;
 
+    //constructuro inicializa objeto CustomUserDetailsService---->userDetailsService
     @Autowired
     public BasicAuthLogin(CustomUserDetailsService userDetailsService, JwtService jwtService) {
         this.userDetailsService = userDetailsService;
@@ -36,11 +38,15 @@ public class BasicAuthLogin {
         System.out.println("Llegamos");
         System.out.println("Correo: " + correo + " Password: " + password);
 
+        //le entregamos el correo a la funcion loadUserByUsername que es una funcion ya existente esta se sobre escribe,
+        //le entregamos el correo al frameworck.
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(correo);
+
         if (userDetails == null) {
             return ResponseEntity.badRequest().body("Invalid email or password");
         }
-
+        //hacer el maches con el userDetails y a contraseña que Viene del post
         return validatePasswordAndCreateToken(userDetails, password);
     }
 
@@ -50,11 +56,16 @@ public class BasicAuthLogin {
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             return ResponseEntity.badRequest().body("Invalid email or password");
         }
-
+        //encapsulado Username del usuarioDetails
         String mobile = userDetails.getUsername();
-        String role = userDetails.getAuthorities().stream()
-                .findFirst().map(Object::toString).orElse("ROLE_USER");
 
+        String role = userDetails.getAuthorities().stream()
+                .findFirst()//.stream() Convierte la colección de GrantedAuthority en un flujo
+                .map(Object::toString)//Si findFirst() encuentra un rol, .map() transforma ese rol en una cadena de texto.
+                .orElse("ROLE_USER");//Si findFirst() devolvió un Optional.empty() (el usuario no tiene roles), .orElse()
+
+        // si existe el usuaio  {   UserDetails userDetails = userDetailsService.loadUserByUsername(correo); }
+        // y su contraseña hace maches con la bd se crea el token
         String token = jwtService.crearToken(mobile, role);
 
         System.out.println("Token: " + token);
@@ -71,6 +82,7 @@ public class BasicAuthLogin {
                 ));
     }
 
+    //validar si el token esta corectamente firmado
     @GetMapping("/Acceso/ValidarToken")
     public ResponseEntity<Map<String, Boolean>> isTokenValid(@RequestParam String token) {
         boolean isValid = jwtService.verificar2(token);

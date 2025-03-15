@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.restApi.prueba.http_errors.NotFoundException;
 import com.restApi.prueba.models.Persona;
 import com.restApi.prueba.repositorys.PersonaRepository;
-import com.restApi.prueba.resources.Dtos.UsuarioDTO;
+import com.restApi.prueba.resources.Dtos.PersonaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +27,11 @@ public class PersonaService {
     }
 
     public Persona createUsuario(Persona usuario) {
-        usuario.setContraseña(passwordEncoder.encode(usuario.getContrasena()));
+
+        //creamos el usuario encriptando su contraseña en db.
+        //usuario.setContraseña(passwordEncoder.encode(usuario.getContrasena()));
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+
         return personaRepository.save(usuario);
     }
 
@@ -35,33 +39,43 @@ public class PersonaService {
         return personaRepository.findAll();
     }
 
-    public UsuarioDTO getUsuarioById(Long id) {
+    public PersonaDTO getUsuarioById(Long id) {
         Optional<Persona> optionalUsuario = personaRepository.findById(id);
         if (optionalUsuario.isEmpty()) {
             throw new NotFoundException("Usuario no encontrado con ID: " + id);
         }
-        Persona usuario = optionalUsuario.get();
-        UsuarioDTO usuarioDTO = new UsuarioDTO();
-        usuarioDTO.setId(usuario.getId());
-        usuarioDTO.setNombre(usuario.getNombre());
-        usuarioDTO.setCorreo(usuario.getCorreo());
-        usuarioDTO.setComunidad(usuario.getComunidad());
-        return usuarioDTO;
+        Persona persona = optionalUsuario.get();
+
+        PersonaDTO PersonaDTO = new PersonaDTO();
+       // PersonaDTO.setId(usuario.getId());
+        PersonaDTO.setIdPersona(persona.getIdPersona());
+        PersonaDTO.setNombre(persona.getNombre());
+        PersonaDTO.setApellido(persona.getApellido());
+        PersonaDTO.setFechaNacimiento(persona.getFechaNacimiento());
+        PersonaDTO.setEmail(persona.getEmail());
+        PersonaDTO.setTelefono(persona.getTelefono());
+        PersonaDTO.setTipo(persona.getTipo());
+        return PersonaDTO;
     }
 
-    public Persona updateUsuario(Long id, UsuarioDTO usuarioDTO) {
+    public Persona updateUsuario(Long id, PersonaDTO personaDTO) {
         Optional<Persona> optionalUsuario = personaRepository.findById(id);
         if (optionalUsuario.isEmpty()) {
             throw new NotFoundException("Usuario no encontrado con ID: " + id);
         }
+
         Persona existingUsuario = optionalUsuario.get();
-        existingUsuario.setNombre(usuarioDTO.getNombre());
-        existingUsuario.setCorreo(usuarioDTO.getCorreo());
-        existingUsuario.setContraseña(usuarioDTO.getContrasena());
-        existingUsuario.setComunidad(usuarioDTO.getComunidad());
+
+        existingUsuario.setNombre(personaDTO.getNombre());
+        existingUsuario.setApellido(personaDTO.getApellido());
+        existingUsuario.setFechaNacimiento(personaDTO.getFechaNacimiento());
+        existingUsuario.setEmail(personaDTO.getEmail());
+        existingUsuario.setPassword(personaDTO.getPassword());
+        existingUsuario.setTelefono(personaDTO.getTelefono());
+        existingUsuario.setTipo(personaDTO.getTipo());
 
         try {
-            String json = objectMapper.writeValueAsString(usuarioDTO);
+            String json = objectMapper.writeValueAsString(personaDTO);
             System.out.println("Usuario actualizado (JSON): " + json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -79,11 +93,11 @@ public class PersonaService {
     }
 
     public boolean validarCredenciales(String correo, String contrasena) {
-        Optional<Persona> optionalUsuario = personaRepository.findByCorreo(correo);
+        Optional<Persona> optionalUsuario = personaRepository.findByEmail(correo);
         if (optionalUsuario.isEmpty()) {
             throw new NotFoundException("Usuario no encontrado con correo: " + correo);
         }
         Persona usuario = optionalUsuario.get();
-        return passwordEncoder.matches(contrasena, usuario.getContrasena());
+        return passwordEncoder.matches(contrasena, usuario.getPassword());
     }
 }

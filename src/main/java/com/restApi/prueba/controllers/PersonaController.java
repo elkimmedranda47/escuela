@@ -34,41 +34,46 @@ public class PersonaController {
         this.personaService = usuarioService;
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Persona createUsuario(@RequestBody Persona usuario) {
-        return personaService.createUsuario(usuario);
-    }
 
+    //ok
     @GetMapping
     public List<Persona> getAllUsuarios() {
         return personaService.getAllUsuario();
     }
 
-    /*
+   //ok
     @GetMapping("/{id}")
-    public UsuarioDTO getUsuarioById(@PathVariable Long id) {
+    public PersonaDTO getUsuarioById(@PathVariable Long id) {
+        System.out.println("id del usairo: "+id);
         return personaService.getUsuarioById(id);
     }
-
+    //http://localhost:8080/auth/registro url publica para registros de personas
+    /*
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Persona createUsuario(@RequestBody Persona usuario) {
+        return personaService.createUsuario(usuario);
+    }
+    */
+    //ok
     @PutMapping("/{id}")
-    public Persona updateUsuarios(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
+    public Persona updateUsuarios(@PathVariable Long id, @RequestBody PersonaDTO PersonaDTO) {
         System.out.println("id del Usuario: " + id);
 
-        if (usuarioDTO == null || usuarioDTO.getNombre() == null || usuarioDTO.getNombre().isEmpty()) {
+        if (PersonaDTO == null || PersonaDTO.getNombre() == null || PersonaDTO.getNombre().isEmpty()) {
             throw new BadRequestException("El nombre del usuario no puede estar vacío.");
         }
 
         try {
-            String json = objectMapper.writeValueAsString(usuarioDTO);
+            String json = objectMapper.writeValueAsString(PersonaDTO);
             System.out.println("Usuario actualizado (JSON): " + json);
         } catch (JsonProcessingException e) {
             System.err.println("Error al convertir el objeto a JSON: " + e.getMessage());
         }
 
-        return personaService.updateUsuario(id, usuarioDTO);
+        return personaService.updateUsuario(id, PersonaDTO);
     }
-
+//ok
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable Long id) {
         System.err.println("controller idUsuario: " + id);
@@ -76,5 +81,5 @@ public class PersonaController {
         return ResponseEntity.noContent().build(); // Return 204 No Content
     }
 
-    */
+
 }

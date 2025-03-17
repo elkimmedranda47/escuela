@@ -25,6 +25,7 @@ public class MatriculaController {
         return matriculaService.getById(id);
     }
 
+    //Listar Matriculas de Estudiante
     @GetMapping("/estudiante/{estudianteId}")
     public List<MatriculaDTO> getMatriculasByEstudiante(@PathVariable Long estudianteId) {
         return matriculaService.findByEstudianteId(estudianteId);
@@ -46,6 +47,8 @@ public class MatriculaController {
     public void deleteMatricula(@PathVariable Long id) {
         matriculaService.delete(id);
     }
+
+
 
 
 }

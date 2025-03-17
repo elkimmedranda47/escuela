@@ -1,5 +1,6 @@
 package com.restApi.prueba.services;
 
+import com.restApi.prueba.http_errors.ConflictException;
 import com.restApi.prueba.http_errors.NotFoundException;
 import com.restApi.prueba.models.Curso;
 import com.restApi.prueba.models.Estudiante;
@@ -56,6 +57,10 @@ public class MatriculaService{
                 .orElseThrow(() -> new NotFoundException("Estudiante no encontrado con id: " + dto.getIdEstudiante()));
         Curso curso = cursoRepository.findById(dto.getIdCurso())
                 .orElseThrow(() -> new NotFoundException("Curso no encontrado con id: " + dto.getIdCurso()));
+        // Validar si ya está matriculado
+        if (matriculaRepository.existsByEstudianteAndCurso(estudiante, curso)) {
+            throw new ConflictException("El estudiante ya está matriculado en este curso");
+        }
         Matricula insc = modelMapper.map(dto, Matricula.class);
         insc.setEstudiante(estudiante);
         insc.setCurso(curso);
@@ -102,5 +107,38 @@ public class MatriculaService{
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public MatriculaDTO matricularEstudiante(MatriculaDTO request) {
+        // Validar existencia de Estudiante y Curso
+        Estudiante estudiante = estudianteRepository.findById(request.getIdEstudiante())
+                .orElseThrow(() -> new NotFoundException("Estudiante no encontrado"));
+        Curso curso = cursoRepository.findById(request.getIdCurso())
+                .orElseThrow(() -> new NotFoundException("Curso no encontrado"));
+
+        // Validar si ya está matriculado
+        if (matriculaRepository.existsByEstudianteAndCurso(estudiante, curso)) {
+            throw new ConflictException("El estudiante ya está matriculado en este curso");
+        }
+
+        // Crear matrícula
+        Matricula matricula = new Matricula();
+        matricula.setEstudiante(estudiante);
+        matricula.setCurso(curso);
+        matricula.setFechaMatricula(request.getFechaMatricula());
+        matricula = matriculaRepository.save(matricula);
+
+        return convertToResponse(matricula);
+    }
+
+    private MatriculaDTO convertToResponse(Matricula matricula) {
+        // Usar ModelMapper o asignación manual
+        MatriculaDTO response = new MatriculaDTO();
+        response.setIdMatricula(matricula.getIdMatricula());
+        response.setIdEstudiante(matricula.getEstudiante().getIdPersona());
+        response.setIdCurso(matricula.getCurso().getIdCurso());
+        response.setFechaMatricula(matricula.getFechaMatricula());
+
+        return response;
     }
 }

@@ -3,7 +3,6 @@ package com.restApi.prueba.controllers;
 import com.restApi.prueba.resources.Dtos.EstudianteDTO;
 import com.restApi.prueba.services.EstudianteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;

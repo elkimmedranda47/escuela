@@ -9,7 +9,8 @@ INSERT INTO personas (nombre, apellido, fecha_nacimiento, email, telefono, tipo,
 ('Pedro', 'Sánchez', '2000-06-01', 'pedro.sanchez@email.com', '5552233445', 'ESTUDIANTE', 'hashed_password_7'),
 ('Laura', 'Fernández', '1982-04-28', 'laura.fernandez@email.com', '5555566778', 'PROFESOR', 'hashed_password_8'),
 ('Diego', 'Ruiz', '1993-01-12', 'diego.ruiz@email.com', '5558899001', 'ADMINISTRATIVO', 'hashed_password_9'),
-('Elena', 'Jiménez', '1979-10-08', 'elena.jimenez@email.com', '5553344556', 'ESTUDIANTE', 'hashed_password_10');
+('Elena', 'Jiménez', '1979-10-08', 'elena.jimenez@email.com', '5553344556', 'ESTUDIANTE', 'hashed_password_10'),
+('Rodríguez', 'Carlos', '1985-11-08', 'carlos.rodriguez@example.com', '+34600987654', 'ADMINISTRATIVO', '$2a$10$wTqj8suFiQx5fxRpfZxe8uhbsoYyp3ZNJ6ObDTAIQBoM4TZoe/Pii');
 
 -- Insertar 3 estudiantes
 INSERT INTO estudiantes (id_persona, numero_matricula, grado) VALUES

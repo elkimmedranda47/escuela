@@ -15,7 +15,7 @@
     <groupId>com.restApi</groupId>
     <artifactId>prueba_v002</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>gobernanza_prueba_v002</name>
+    <name>Sistema_Escolar</name>
     <description>Demo project for Spring Boot with JPA</description>
 
     <properties>

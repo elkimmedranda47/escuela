@@ -24,8 +24,8 @@ Este es un proyecto de demostración que utiliza Spring Boot con JPA para crear 
 
 1. **Clona el repositorio**:
    ```bash
-   git clone https://github.com/tu-usuario/gobernanza_prueba_v002.git
-   cd gobernanza_prueba_v002
+   git clone https://github.com/elkimmedranda47/escuela
+   cd escuela
 Configura la base de datos:
 
 Crea una base de datos en PostgreSQL.

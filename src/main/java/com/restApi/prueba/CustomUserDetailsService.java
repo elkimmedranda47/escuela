@@ -1,6 +1,8 @@
 package com.restApi.prueba;
 
 // ROLES DEL USUARIO ENUMERADOR ROLES
+import com.restApi.prueba.configuration.JwtService;
+
 import com.restApi.prueba.http_errors.Role;
 
 
@@ -14,7 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
+import com.restApi.prueba.http_errors.AccessDeniedException;
+//import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +25,17 @@ import java.util.Optional;
 @Service("userDetailsService")
 
 //implementando del frameworck
-public class CustomUserDetailsService implements UserDetailsService { // Cambiado a UserDetailsService
+public class CustomUserDetailsService implements UserDetailsService {
+
+
+    private final JwtService jwtService; // Cambiado a UserDetailsService
 
     @Autowired
     private PersonaRepository personaRepository;
+
+    public CustomUserDetailsService(JwtService jwtService) {
+        this.jwtService=jwtService;
+    }
 
     //sobre escribienido una funcion  ya existente loadUserByUsername(String correo) de la clase  UserDetailsService se le
     //entrega un correo y si lo encuentra creamo el -----> springframework.security.core.userdetails.User.builder()
@@ -36,11 +46,17 @@ public class CustomUserDetailsService implements UserDetailsService { // Cambiad
          Optional<Persona> persona = personaRepository.findByEmail(correo);
        // Optional<Persona> usuario = personaRepository.findByCorreo(correo);
         //TipoPersona
-        System.out.println(" +++++++++++++++++++++++++++++++++++++++tipo persona+++++++++++++++++++++++++++"+ persona.get().getTipo().name());
+
+
+
 
         if (persona.isEmpty()) {
-            throw new UsernameNotFoundException("Usuario no encontrado con correo: " + correo);
+            System.out.println(" +++++++++++++++++++++++++++++++++++++++!!! persona Error !!!+++++++++++++++++++++++++++");
+           // throw new UsernameNotFoundException("Usuario no encontrado con correo: " + correo);
+            throw new AccessDeniedException("Account is inactive.");
         }
+
+
 
 
         //buscar los roles en bd

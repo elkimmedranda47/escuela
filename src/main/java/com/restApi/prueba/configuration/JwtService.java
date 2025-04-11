@@ -7,8 +7,14 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.security.access.AccessDeniedException;
+import com.restApi.prueba.http_errors.AccessDeniedException;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.core.AuthenticationException;
+
+//import javax.naming.AuthenticationException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -75,6 +81,10 @@ public class JwtService {
     }
      // Función para verificar si el token es válido
       public boolean isTokenValid(String token) {
+
+          System.out.println("Token recibido: " + token);
+          //System.out.println("Token válido: " + jwtService.isTokenValid(token));
+
         try {
             DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(this.secreto))
                     .withIssuer(this.emisor)
@@ -143,7 +153,9 @@ public class JwtService {
     public String extractUsername(String token) {
         return this.verificar(token)
                 .map(jwt -> jwt.getClaim(MOBILE_CLAIM).asString()) // o GMAIL_CLAIM si usas email
-                .orElseThrow(() -> new JWTVerificationException("Token inválido"));
+              //  .orElseThrow(() -> new JWTVerificationException("Token inválido"));
+                .orElseThrow(() -> new CredentialsExpiredException("Token inválido no Permitido"));
+
     }
 
 

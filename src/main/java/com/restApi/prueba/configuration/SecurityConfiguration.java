@@ -1,18 +1,14 @@
 package com.restApi.prueba.configuration;
 
 import com.restApi.prueba.CustomUserDetailsService;
-
-//import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,9 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.util.Arrays;
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -40,16 +34,67 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configuración de CORS
+               /* .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))*/
+                /*.authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/public/**", "/basic-auth/login", "/signup", "/basic-auth/Acceso/ValidarToken", "/auth/registro").permitAll()
+                        .anyRequest().authenticated()*/
+               // .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+
+                //.addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class /*SecurityWebFiltersOrder.AUTHENTICATION*/);
+
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                //.csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/basic-auth/login")) // Desactiva CSRF para /basic-auth/login
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                )
+
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/public/**", "/basic-auth/login", "/signup", "/basic-auth/Acceso/ValidarToken", "/auth/registro").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated())
+                .addFilterBefore(new JwtAuthenticationFilter(jwtService,customUserDetailsService), UsernamePasswordAuthenticationFilter.class /*SecurityWebFiltersOrder.AUTHENTICATION*/);
+
+
+
+        return http.build();
+        }
+
+        /*
+        * @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/basic-auth/login")) // Desactiva CSRF para /basic-auth/login
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtService, customUserDetailsService), UsernamePasswordAuthenticationFilter.class);
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/public/**", "/basic-auth/login", "/signup",
+                                "/basic-auth/Acceso/ValidarToken", "/auth/registro").permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(new JwtAuthenticationFilter(jwtService, customUserDetailsService),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+        *
+        *
+        *
+        * */
+
+
+
+
+
+
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

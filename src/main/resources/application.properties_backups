@@ -1,0 +1,41 @@
+# Nombre de la aplicación
+spring.application.name=prueba
+
+# Configuración de la base de datos (JPA con PostgreSQL)
+spring.datasource.url=jdbc:postgresql://localhost:5432/bd_escuela
+spring.datasource.username=postgres
+spring.datasource.password=password
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.hibernate.ddl-auto=none
+
+# Ejecuta data.sql DESPUÉS de que Hibernate cree las tablas
+spring.jpa.defer-datasource-initialization=true
+#spring.sql.init.mode=always
+spring.sql.init.mode=never
+
+
+#spring.sql.init.mode=always
+#spring.datasource.initialization-mode=ALWAYS
+#spring.sql.init.mode=always
+logging.level.org.springframework.jdbc=DEBUG
+
+logging.level.org.springframework.security=DEBUG
+
+
+# Mostrar consultas SQL en la consola
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# Configuración del logging
+#spring.output.ansi.enabled=ALWAYS
+#logging.level.org.springframework.boot.web.embedded.netty=DEBUG
+
+# Configuración del servidor web
+#spring.jackson.default-property-inclusion=NON_NULL
+
+# Configuración de JWT
+miw.jwt.expire=3600
+miw.jwt.issuer=es-upm-upm
+miw.jwt.secret=secret_to_test

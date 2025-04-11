@@ -5,7 +5,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-class ErrorMessage {
+public class ErrorMessage {
 
     private final String error;
     private final String message;

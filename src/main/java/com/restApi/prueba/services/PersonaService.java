@@ -100,4 +100,9 @@ public class PersonaService {
         Persona usuario = optionalUsuario.get();
         return passwordEncoder.matches(contrasena, usuario.getPassword());
     }
+
+    public boolean existsByEmail(String email){
+
+        return personaRepository.existsByEmail(email);
+    }
 }

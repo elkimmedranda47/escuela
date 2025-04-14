@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,15 +35,6 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-               /* .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))*/
-                /*.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**", "/basic-auth/login", "/signup", "/basic-auth/Acceso/ValidarToken", "/auth/registro").permitAll()
-                        .anyRequest().authenticated()*/
-               // .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
-
-                //.addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class /*SecurityWebFiltersOrder.AUTHENTICATION*/);
 
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 //.csrf(csrf -> csrf.disable())
@@ -54,16 +46,26 @@ public class SecurityConfiguration {
                         exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 )
 
+ /*               .httpBasic(httpBasic -> httpBasic
+                        .authenticationEntryPoint(new ExceptionRaisingAuthenticationEntryPoint())
+                )
+*/
+/*               .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(new ExceptionRaisingAuthenticationEntryPoint())
+                )
 
+ */
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**", "/basic-auth/login", "/signup", "/basic-auth/Acceso/ValidarToken", "/auth/registro").permitAll()
+                        .requestMatchers("/basic-auth/login", "/basic-auth/Acceso/ValidarToken", "/auth/registro").permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(new JwtAuthenticationFilter(jwtService,customUserDetailsService), UsernamePasswordAuthenticationFilter.class /*SecurityWebFiltersOrder.AUTHENTICATION*/);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtService,customUserDetailsService), UsernamePasswordAuthenticationFilter.class );
 
 
 
-        return http.build();
+            return http.build();
         }
+
+
 
         /*
         * @Bean
@@ -90,6 +92,29 @@ public class SecurityConfiguration {
         * */
 
 
+
+/*
+   @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/basic-auth/login"))
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(exception -> exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
+            .authorizeHttpRequests(auth -> auth
+
+                    .requestMatchers(RolePermissions.PUBLIC_ENDPOINTS).permitAll()
+                .requestMatchers(RolePermissions.ADMIN_ENDPOINTS).hasRole("ADMIN")
+                .requestMatchers(RolePermissions.OPERATOR_ENDPOINTS).hasRole("OPERATOR")
+                .requestMatchers(RolePermissions.CUSTOMER_ENDPOINTS).hasRole("CUSTOMER")
+
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(new JwtAuthenticationFilter(jwtService, customUserDetailsService), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+*/
 
 
 

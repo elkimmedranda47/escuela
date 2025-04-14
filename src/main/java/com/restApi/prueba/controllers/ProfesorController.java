@@ -6,10 +6,13 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+
+@PreAuthorize(" hasRole('ESTUDIANTE') OR hasRole('PROFESOR') OR hasRole('ROLE_CUSTOMER' OR hasRole('ROLE_ADMIN') OR hasRole('ROLE_OPERATOR')")
 
 @RestController
 @RequestMapping("/api/profesor")

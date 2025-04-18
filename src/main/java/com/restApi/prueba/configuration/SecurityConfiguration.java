@@ -36,89 +36,19 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
 
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                //.csrf(csrf -> csrf.disable())
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/basic-auth/login")) // Desactiva CSRF para /basic-auth/login
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                )
-
- /*               .httpBasic(httpBasic -> httpBasic
-                        .authenticationEntryPoint(new ExceptionRaisingAuthenticationEntryPoint())
-                )
-*/
-/*               .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(new ExceptionRaisingAuthenticationEntryPoint())
-                )
-
- */
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/basic-auth/login", "/basic-auth/Acceso/ValidarToken", "/auth/registro").permitAll()
-                        .anyRequest().authenticated())
-                .addFilterBefore(new JwtAuthenticationFilter(jwtService,customUserDetailsService), UsernamePasswordAuthenticationFilter.class );
-
-
-
-            return http.build();
-        }
-
-
-
-        /*
-        * @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/basic-auth/login")) // Desactiva CSRF para /basic-auth/login
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                )
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**", "/basic-auth/login", "/signup",
-                                "/basic-auth/Acceso/ValidarToken", "/auth/registro").permitAll()
-                        .anyRequest().authenticated())
-                .addFilterBefore(new JwtAuthenticationFilter(jwtService, customUserDetailsService),
-                        UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
-        *
-        *
-        *
-        * */
-
-
-
-/*
-   @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/basic-auth/login"))
+            .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .exceptionHandling(exception -> exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
-            .authorizeHttpRequests(auth -> auth
-
-                    .requestMatchers(RolePermissions.PUBLIC_ENDPOINTS).permitAll()
-                .requestMatchers(RolePermissions.ADMIN_ENDPOINTS).hasRole("ADMIN")
-                .requestMatchers(RolePermissions.OPERATOR_ENDPOINTS).hasRole("OPERATOR")
-                .requestMatchers(RolePermissions.CUSTOMER_ENDPOINTS).hasRole("CUSTOMER")
-
-                .anyRequest().authenticated()
+            .addFilterBefore(new JwtAuthenticationFilter(jwtService,customUserDetailsService), UsernamePasswordAuthenticationFilter.class )
+            .exceptionHandling(exception ->
+                    exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
             )
-            .addFilterBefore(new JwtAuthenticationFilter(jwtService, customUserDetailsService), UsernamePasswordAuthenticationFilter.class);
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers( "/basic-auth/login","/auth/registro","/basic-auth/Acceso/ValidarToken").permitAll()
 
+                    .anyRequest().authenticated());
         return http.build();
-    }
-*/
-
-
-
-
+        }
 
 
     @Bean

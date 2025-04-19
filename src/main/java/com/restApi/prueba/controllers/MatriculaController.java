@@ -4,12 +4,18 @@ import com.restApi.prueba.services.MatriculaService;
 import com.restApi.prueba.resources.Dtos.MatriculaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+@Secured({"ADMINISTRATIVO"})
 @RestController
 @RequestMapping("/api/matricula")
+
+
+
 public class MatriculaController {
 
     @Autowired

@@ -11,6 +11,8 @@ import com.restApi.prueba.models.Persona;
 import com.restApi.prueba.services.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -56,17 +58,19 @@ public class BasicAuhtRegistro {
 
 */
 
-    public Persona createUsuario(@RequestBody Persona usuarioDTO) {
+    public /*Persona */ ResponseEntity createUsuario(@RequestBody Persona usuarioDTO) {
         System.out.println("Intentando registrar usuario con email: " + usuarioDTO.getEmail());
 
         boolean existe = personaService.existsByEmail(usuarioDTO.getEmail());
-        System.out.println("¿El email ya existe en la BD? " + existe);
+        //System.out.println("¿El email ya existe en la BD? " + existe);
 
         if (existe) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El email ya está en uso");
-        }
+           // throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El email ya está en uso");
+            throw new UsernameNotFoundException("El email ya está en uso");
+        }else {personaService.createUsuario(usuarioDTO);}
 
-        return personaService.createUsuario(usuarioDTO);
+      //  return personaService.createUsuario(usuarioDTO);
+        return ResponseEntity.ok("Datos procesados exitosamente.");
     }
 
 }

@@ -3,6 +3,7 @@ package com.restApi.prueba.controllers;
 import com.restApi.prueba.resources.Dtos.EstudianteDTO;
 import com.restApi.prueba.services.EstudianteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 //@RestController
 @RestController
 @RequestMapping("/api/estudiante")
+//@Secured({"ADMINISTRATIVO", "ESTUDIANTE","PROFESOR"})
 
  class EstudianteController {
 

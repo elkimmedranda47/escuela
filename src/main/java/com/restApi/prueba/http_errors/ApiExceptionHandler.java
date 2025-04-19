@@ -4,12 +4,14 @@ import com.restApi.prueba.configuration.ExceptionRaisingAuthenticationEntryPoint
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
-//@RestControllerAdvice
+@RestControllerAdvice
 public class ApiExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -25,6 +27,12 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorMessage> handleNotFoundException(NotFoundException ex) {
+        ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler({
             UnauthorizedException.class,
             AuthenticationException.class
@@ -34,13 +42,33 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorMessage> handleBadRequestException(BadRequestException ex) {
+        ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
 
+    //
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorMessage> handleNoHandlerFoundException(NoHandlerFoundException ex) {
+        ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+    }
+
+
+    //
     @ExceptionHandler(org.springframework.security.authentication.InsufficientAuthenticationException.class)
     public ResponseEntity<ErrorMessage> handleInsufficientAuthentication(org.springframework.security.authentication.InsufficientAuthenticationException ex) {
         ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.UNAUTHORIZED.value());
         return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorMessage> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.NOT_FOUND.value()); // Or HttpStatus.UNAUTHORIZED
+        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND); // Or UNAUTHORIZED
+    }
+    /*
     @ExceptionHandler(ExceptionRaisingAuthenticationEntryPoint.AuthenticationFailedException.class)
     public ResponseEntity<Object> handleAuthenticationFailedException(ExceptionRaisingAuthenticationEntryPoint.AuthenticationFailedException ex) {
         // Personaliza la respuesta de error aquí
@@ -48,7 +76,7 @@ public class ApiExceptionHandler {
                 String.format("{\"error\": \"%s\", \"message\": \"%s\"}",
                         HttpStatus.UNAUTHORIZED.getReasonPhrase(), ex.getMessage()));
     }
-
+*/
 
 
     // Captura cualquier otra excepción no manejada

@@ -3,6 +3,7 @@ package com.restApi.prueba;
 // ROLES DEL USUARIO ENUMERADOR ROLES
 import com.restApi.prueba.configuration.JwtService;
 
+import com.restApi.prueba.http_errors.BadRequestException;
 import com.restApi.prueba.http_errors.Role;
 
 
@@ -52,8 +53,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         if (persona.isEmpty()) {
             System.out.println(" +++++++++++++++++++++++++++++++++++++++!!! persona Error !!!+++++++++++++++++++++++++++");
-           // throw new UsernameNotFoundException("Usuario no encontrado con correo: " + correo);
-            throw new AccessDeniedException("Account is inactive.");
+          // throw new UsernameNotFoundException("Correo o contraseña no son Correctos");
+            //throw new AccessDeniedException("Account is inactive.");
+            throw new BadRequestException("El email ya está en uso.");
+
+
         }
 
 

@@ -8,6 +8,7 @@ import com.restApi.prueba.models.Persona;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 
 @RestController
+@Secured({"ADMINISTRATIVO"})
 @RequestMapping("/api/persona") // Corrected and added RequestMapping
+
+
 public class PersonaController {
 
     private final PersonaService personaService;

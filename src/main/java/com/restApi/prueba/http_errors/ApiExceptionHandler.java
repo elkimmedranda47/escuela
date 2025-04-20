@@ -10,73 +10,49 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
+    //No tiene el rol para acceder a ese Recurso
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorMessage> handleAccessDenied(AccessDeniedException ex) {
-        System.out.println("*****************************fin2**********************************************");
+        System.out.println("*****************************AccessDeniedException**********************************************");
         ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.FORBIDDEN.value());
         return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
     }
-
-    @ExceptionHandler(CredentialsExpiredException.class)
-    public ResponseEntity<ErrorMessage> handleCredentialsExpired(CredentialsExpiredException ex) {
-        ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.UNAUTHORIZED.value());
-        return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorMessage> handleNotFoundException(NotFoundException ex) {
-        ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.NOT_FOUND.value());
-        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler({
-            UnauthorizedException.class,
-            AuthenticationException.class
-    })
-    public ResponseEntity<ErrorMessage> handleUnauthorized(Exception ex) {
-        ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.UNAUTHORIZED.value());
-        return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
-    }
-
+/*
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorMessage> handleBadRequestException(BadRequestException ex) {
+        System.out.println("*****************************BadRequestException**********************************************");
         ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
+*/
+    //Registro invalido correo ya existe, se lanza y captura con un archivo ya existente ConflictException http_errores
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorMessage> handleDataIntegrityViolationException(ConflictException ex) {
+        System.out.println("*****************************ConflictException**********************************************");
 
-    //
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ErrorMessage> handleNoHandlerFoundException(NoHandlerFoundException ex) {
+        ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.CONFLICT.value());
+        return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
+    }
+
+    //Login invalido correo incorrecto
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorMessage> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        System.out.println("*****************************UsernameNotFoundException**********************************************");
+        ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.UNAUTHORIZED.value()); // Or HttpStatus.UNAUTHORIZED
+        return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED); // Or UNAUTHORIZED
+    }
+
+    // El recurso url no existe
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorMessage> handleNoResourceFoundException(NoResourceFoundException ex) {
         ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
     }
-
-
-    //
-    @ExceptionHandler(org.springframework.security.authentication.InsufficientAuthenticationException.class)
-    public ResponseEntity<ErrorMessage> handleInsufficientAuthentication(org.springframework.security.authentication.InsufficientAuthenticationException ex) {
-        ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.UNAUTHORIZED.value());
-        return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ErrorMessage> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-        ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.NOT_FOUND.value()); // Or HttpStatus.UNAUTHORIZED
-        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND); // Or UNAUTHORIZED
-    }
-    /*
-    @ExceptionHandler(ExceptionRaisingAuthenticationEntryPoint.AuthenticationFailedException.class)
-    public ResponseEntity<Object> handleAuthenticationFailedException(ExceptionRaisingAuthenticationEntryPoint.AuthenticationFailedException ex) {
-        // Personaliza la respuesta de error aquí
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                String.format("{\"error\": \"%s\", \"message\": \"%s\"}",
-                        HttpStatus.UNAUTHORIZED.getReasonPhrase(), ex.getMessage()));
-    }
-*/
 
 
     // Captura cualquier otra excepción no manejada
@@ -89,61 +65,3 @@ public class ApiExceptionHandler {
     }
 }
 
-
-
-
-
-
-
-
-
-/*
-package com.restApi.prueba.http_errors;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.AuthenticationException;
-
-@RestControllerAdvice
-public class ApiExceptionHandler {
-
-
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ResponseBody
-    public ErrorMessage handleAccessDenied(AccessDeniedException ex) {
-
-
-        return new ErrorMessage(ex, HttpStatus.UNAUTHORIZED.value());
-    }
-
-
-
-    @ExceptionHandler(CredentialsExpiredException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ResponseBody
-    public ErrorMessage handleCredentialsExpired(CredentialsExpiredException ex) {
-
-        return new ErrorMessage(ex, HttpStatus.UNAUTHORIZED.value());
-    }
-
-
-
-    @ExceptionHandler({
-            UnauthorizedException.class,
-            AuthenticationException.class
-    })
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ResponseBody
-    public ErrorMessage handleUnauthorized(Exception ex) {
-
-        return new ErrorMessage(ex, HttpStatus.UNAUTHORIZED.value());
-    }
-
-}
-*/

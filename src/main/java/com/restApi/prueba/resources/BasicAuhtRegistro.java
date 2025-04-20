@@ -7,6 +7,7 @@ package com.restApi.prueba.resources;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.restApi.prueba.http_errors.ConflictException;
 import com.restApi.prueba.models.Persona;
 import com.restApi.prueba.services.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class BasicAuhtRegistro {
 
         if (existe) {
            // throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El email ya está en uso");
-            throw new UsernameNotFoundException("El email ya está en uso");
+            throw new ConflictException("El email ya está en uso");
         }else {personaService.createUsuario(usuarioDTO);}
 
       //  return personaService.createUsuario(usuarioDTO);

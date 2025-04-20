@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,9 +45,10 @@ public class BasicAuthLogin {
 
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(correo);
 
-        if (userDetails == null) {
+        /*if (userDetails == null) {
             return ResponseEntity.badRequest().body("Invalid email or password");
-        }
+        }*/
+
         //hacer el maches con el userDetails y a contraseña que Viene del post
         return validatePasswordAndCreateToken(userDetails, password);
     }
@@ -55,7 +57,10 @@ public class BasicAuthLogin {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            return ResponseEntity.badRequest().body("Invalid email or password");
+            //return ResponseEntity.badRequest().body("Correo o contraseña invalidos");
+           // return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).body("Correo o contraseña invalidos");
+                throw new UsernameNotFoundException("Correo o contraseña invalidos");
+
         }
         //encapsulado Username del usuarioDetails
         String mobile = userDetails.getUsername();

@@ -47,22 +47,15 @@ public class CustomUserDetailsService implements UserDetailsService {
          Optional<Persona> persona = personaRepository.findByEmail(correo);
        // Optional<Persona> usuario = personaRepository.findByCorreo(correo);
         //TipoPersona
-
-
-
-
         if (persona.isEmpty()) {
             System.out.println(" +++++++++++++++++++++++++++++++++++++++!!! persona Error !!!+++++++++++++++++++++++++++");
-          // throw new UsernameNotFoundException("Correo o contraseña no son Correctos");
+           throw new UsernameNotFoundException("Correo o contraseña invalidos");
+
             //throw new AccessDeniedException("Account is inactive.");
-            throw new BadRequestException("El email ya está en uso.");
+            //throw new BadRequestException("!!!El usuairo o la contraseña son incorrectos!!!");
 
 
         }
-
-
-
-
         //buscar los roles en bd
         //con este odjeto--->Persona buscar los roles de persona y crear la lista de authorities  List<GrantedAuthority>
         List<GrantedAuthority> authorities = new ArrayList<>();

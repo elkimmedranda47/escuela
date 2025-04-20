@@ -11,7 +11,7 @@ import java.util.List;
 //@RestController
 @RestController
 @RequestMapping("/api/estudiante")
-//@Secured({"ADMINISTRATIVO", "ESTUDIANTE","PROFESOR"})
+@Secured({"ADMINISTRATIVO", "ESTUDIANTE","PROFESOR"})
 
  class EstudianteController {
 

@@ -35,6 +35,8 @@ public class AdministrativoController {
         return new ResponseEntity<>(administrativo, HttpStatus.OK);
     }
 
+    /*
+
     @PostMapping
     public ResponseEntity<AdministrativoDTO> createAdministrativo( @RequestBody AdministrativoDTO administrativoDTO) {
         AdministrativoDTO createdAdministrativo = service.create(administrativoDTO);
@@ -46,7 +48,7 @@ public class AdministrativoController {
         AdministrativoDTO updatedAdministrativo = service.update(id, administrativoDTO);
         return new ResponseEntity<>(updatedAdministrativo, HttpStatus.OK);
     }
-
+*/
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAdministrativo(@PathVariable Long id) {
         service.delete(id);

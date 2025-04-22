@@ -11,6 +11,11 @@ import java.util.List;
 //@RestController
 @RestController
 @RequestMapping("/api/estudiante")
+/*
+@Secured SE DISPARA UN INTERCEPTOR
+horizationManagerBeforeMethodInterceptor: Este es un interceptor de Spring Security que se ejecuta antes de la invocación de un método para verificar si el usuario actual tiene los permisos necesarios para acceder a ese método.
+org.springframework.security.config.annotation.method.configuration.DeferringObservationAuthorizationManager@6cfe896b and decision AuthorityAuthorizationDecision [granted=false, authorities=[ADMINISTRATIVO, ESTUDIANTE]]
+ */
 @Secured({"ADMINISTRATIVO", "ESTUDIANTE","PROFESOR"})
 
  class EstudianteController {

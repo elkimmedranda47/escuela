@@ -53,7 +53,9 @@ public class ApiExceptionHandler {
 
     //Login invalido correo incorrecto
     // Maneja la excepción UsernameNotFoundException, que ocurre cuando no se encuentra un usuario con el nombre de usuario (generalmente el correo electrónico) proporcionado durante la autenticación.
-    @ExceptionHandler(UsernameNotFoundException.class)
+    @ExceptionHandler({UsernameNotFoundException.class
+            /*,CredentialsExpiredException.class*/
+    })
     public ResponseEntity<ErrorMessage> handleUsernameNotFoundException(UsernameNotFoundException ex) {
       //  System.out.println("*****************************UsernameNotFoundException**********************************************");
         ErrorMessage errorMessage = new ErrorMessage(ex, HttpStatus.UNAUTHORIZED.value()); // Or HttpStatus.UNAUTHORIZED

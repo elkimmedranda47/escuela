@@ -1,2 +1,9 @@
-target/*
+#target/*
+#!target/*.jar
+
+# Ignora todo dentro de target/
+target/
+
+# Pero permite archivos .jar dentro de target/
 !target/*.jar
+target/

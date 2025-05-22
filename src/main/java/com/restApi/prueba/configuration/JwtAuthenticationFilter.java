@@ -41,12 +41,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
 
-/*        if (request.getServletPath().equals("/basic-auth/login")) {
+        if (request.getServletPath().equals("/basic-auth/login")) {
             //PASAR AL SIGUIENTE FILTRO
             filterChain.doFilter(request, response);
             return;
         }
-*/
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             System.out.println("LA PETICION NO TIENE Authorization O NO TIENE Bearer");
             filterChain.doFilter(request, response);
